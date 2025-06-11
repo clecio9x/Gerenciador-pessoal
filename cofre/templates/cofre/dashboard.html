@@ -1,0 +1,191 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Cofre</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #eee;
+    }
+    
+    .sections {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+    
+    .section {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+    }
+    
+    .section h2 {
+      margin-top: 0;
+      color: #333;
+      border-bottom: 2px solid #007bff;
+      padding-bottom: 10px;
+    }
+    
+    .form {
+      margin-bottom: 20px;
+    }
+    
+    .form input, .form textarea, .form button {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    
+    .input-group {
+      display: flex;
+      gap: 5px;
+    }
+    
+    .input-group input {
+      flex: 1;
+    }
+    
+    .input-group button {
+      width: auto;
+      padding: 10px 15px;
+    }
+    
+    .items-list {
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+      background: white;
+    }
+    
+    .item {
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      background: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .item h3 {
+      margin: 0 0 10px 0;
+      color: #333;
+    }
+    
+    .item p {
+      margin: 5px 0;
+      word-wrap: break-word;
+    }
+    
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    
+    .btn-info {
+      background: #17a2b8;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    
+    @media (max-width: 768px) {
+      .sections {
+        grid-template-columns: 1fr;
+      }
+      
+      .header {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1 id="welcomeMessage">Bem-vindo ao seu Cofre, {{ username }}!</h1>
+      <a href="{% url 'logout' %}" style="color: #dc3545; text-decoration: none; font-weight: bold;">🚪 Logout</a>
+    </div>
+
+    <div class="sections">
+      <!-- Seção de Senhas -->
+      <div class="section">
+        <h2>🔐 Gerenciar Senhas</h2>
+        
+        <!-- Adicionar Senha -->
+        <form id="passwordForm" class="form">
+          <input type="text" id="passTitle" placeholder="Título (ex: Gmail)" required />
+          <div class="input-group">
+            <input type="password" id="passValue" placeholder="Senha" required />
+            <button type="button" id="togglePassword">👁️</button>
+            <button type="button" id="generatePassword">🔐</button>
+          </div>
+          <button type="submit" style="background: #28a745; color: white; border: none;">Salvar Senha</button>
+        </form>
+
+        <!-- Lista de Senhas -->
+        <h3>Minhas Senhas</h3>
+        <div id="passwordList" class="items-list">
+          <p>Nenhuma senha salva ainda.</p>
+        </div>
+      </div>
+
+      <!-- Seção de Notas -->
+      <div class="section">
+        <h2>📝 Gerenciar Notas</h2>
+        
+        <!-- Adicionar Nota -->
+        <form id="noteForm" class="form">
+          <input type="text" id="noteTitle" placeholder="Título da nota" required />
+          <textarea id="noteContent" placeholder="Conteúdo da nota" rows="3" required></textarea>
+          <button type="submit" style="background: #007bff; color: white; border: none;">Salvar Nota</button>
+        </form>
+
+        <!-- Lista de Notas -->
+        <h3>Minhas Notas</h3>
+        <div id="noteList" class="items-list">
+          <p>Nenhuma nota salva ainda.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="{% static 'dashboard.js' %}"></script>
+</body>
+</html>
