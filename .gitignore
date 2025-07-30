@@ -1,3 +1,7 @@
+# Arquivo de segredos
+# NUNCA remova esta linha
+.env
+
 *.pyc
 __pycache__/
 db.sqlite3

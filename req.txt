@@ -1,0 +1,6 @@
+django
+cryptography
+django-otp
+qrcode
+django-allauth
+python-dotenv

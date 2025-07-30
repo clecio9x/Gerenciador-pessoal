@@ -1,0 +1,51 @@
+{% load static %}
+{% load socialaccount %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Gerenciador Pessoal</h1>
+
+        <form id="loginForm" class="form" method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div style="color: red;">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            {% if error_message %}
+                 <p style="color: red;">{{ error_message }}</p>
+            {% endif %}
+
+            {{ form.username }}
+            {{ form.password }}
+            
+            <button type="submit">Entrar</button>
+        </form>
+
+        <div style="margin: 1rem 0; text-align: center;">ou</div>
+
+        <a href="{% provider_login_url 'google' %}" style="display: block; text-align: center; padding: 10px; background-color: #4285F4; color: white; text-decoration: none; border-radius: 5px;">
+            Entrar com Google
+        </a>
+
+        <p style="margin-top: 1rem;">
+            Não tem uma conta?
+            <a href="{% url 'register' %}">Registrar</a>
+        </p>
+        
+        <p style="margin-top: 0.5rem; text-align: center;">
+            <a href="{% url 'password_reset_request' %}" style="color: #666; text-decoration: none; font-size: 0.9rem;">
+                Esqueci minha senha
+            </a>
+        </p>
+    </div>
+</body>
+</html>

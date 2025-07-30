@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Verificação de Duas Etapas</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 2rem; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .container { max-width: 400px; margin: auto; background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center; }
+        .form-control { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 1.5rem; text-align: center; letter-spacing: 0.5em; margin-bottom: 1rem; }
+        .btn { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; text-decoration: none; font-size: 1rem; width: 100%; }
+        .btn-primary { background-color: #007bff; color: white; }
+        .errorlist { list-style-type: none; padding: 0; color: #dc3545; margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Verificação de Segurança</h2>
+        <p>Abra seu aplicativo autenticador e insira o código de 6 dígitos.</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            {{ form.non_field_errors }}
+            {{ form.token.errors }}
+            {{ form.token }}
+            
+            <button type="submit" class="btn btn-primary">Verificar</button>
+        </form>
+    </div>
+</body>
+</html>

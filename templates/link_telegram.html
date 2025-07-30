@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Vincular Telegram - KeyCrypt{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4><i class="fab fa-telegram-plane"></i> Vincular Conta do Telegram</h4>
+                </div>
+                <div class="card-body text-center">
+                    <p class="text-muted">Para começar a adicionar notas pelo Telegram, envie o comando abaixo para o nosso bot <strong>@SeuNomeDeBotAqui</strong>.</p>
+                    <p>Este código é de uso único e pessoal.</p>
+                    <div class="alert alert-info" style="font-family: monospace; font-size: 1.1rem;">
+                        /vincular {{ token }}
+                    </div>
+                    <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary mt-3">Voltar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
