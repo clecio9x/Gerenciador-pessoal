@@ -1,43 +1,67 @@
-# lambda_function.py
 import json
 import os
-import requests # Esta biblioteca precisa ser adicionada como um Layer
+import requests
 
 # Carrega as variáveis de ambiente
-BOT_TOKEN = os.environ['BOT_TOKEN']
-DJANGO_API_URL = os.environ['DJANGO_API_URL']
-DJANGO_API_KEY = os.environ['DJANGO_API_KEY']
+BOT_TOKEN = os.environ.get('BOT_TOKEN')
+DJANGO_API_KEY = os.environ.get('DJANGO_API_KEY')
+DJANGO_NOTE_API_URL = os.environ.get('DJANGO_NOTE_API_URL')
+DJANGO_LINK_API_URL = os.environ.get('DJANGO_LINK_API_URL')
+DJANGO_UNLINK_API_URL = os.environ.get('DJANGO_UNLINK_API_URL') # <-- NOVA
 TELEGRAM_API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
 def lambda_handler(event, context):
     try:
-        # 1. Pega a mensagem do Telegram
-        body = json.loads(event.get('body', '{}'))
-        message = body.get('message', {})
+        # ... (código de extração de mensagem, chat_id, text continua o mesmo)
+        body_str = event.get('body')
+        if not body_str: return {'statusCode': 200}
+        data = json.loads(body_str)
+        message = data.get('message', {})
         chat_id = message.get('chat', {}).get('id')
         text = message.get('text', '').strip()
 
-        # 2. Verifica se é um comando válido
-        if not chat_id or not text.startswith('/nota '):
-            return {'statusCode': 200}
-
-        note_content = text.replace('/nota ', '', 1).strip()
+        if not chat_id: return {'statusCode': 200}
         
-        # 3. Prepara e envia os dados para a API do Django
-        headers = {'Authorization': f'Bearer {DJANGO_API_KEY}'}
-        # ATENÇÃO: Para este exemplo, estamos salvando a nota para o usuário com ID=1.
-        # Uma implementação real teria um sistema para mapear o chat_id do Telegram ao usuário Django.
-        payload = {'user_id': 1, 'content': note_content}
+        # --- LÓGICA DE COMANDOS ATUALIZADA ---
         
-        response = requests.post(DJANGO_API_URL, json=payload, headers=headers, timeout=10)
-        response.raise_for_status() # Lança um erro se a API do Django retornar erro
+        if text == '/start':
+            reply_message = "Olá! Bem-vindo ao KeyCrypt Bot. Para vincular sua conta, vá ao seu perfil no nosso site e use o comando /vincular."
 
-        reply_message = f"✅ Nota salva com sucesso!"
+        elif text.startswith('/vincular '):
+            token = text.replace('/vincular ', '', 1).strip()
+            headers = {'Authorization': f'Bearer {DJANGO_API_KEY}'}
+            payload = {'token': token, 'chat_id': chat_id}
+            response = requests.post(DJANGO_LINK_API_URL, json=payload, headers=headers)
+            response.raise_for_status()
+            reply_message = response.json().get('message', "✅ Conta vinculada com sucesso!")
+
+        elif text.startswith('/nota '):
+            note_content = text.replace('/nota ', '', 1).strip()
+            headers = {'Authorization': f'Bearer {DJANGO_API_KEY}'}
+            payload = {'chat_id': chat_id, 'content': note_content}
+            response = requests.post(DJANGO_NOTE_API_URL, json=payload, headers=headers)
+            response.raise_for_status()
+            reply_message = response.json().get('message', "✅ Nota salva!")
+        
+        # --- NOVA LÓGICA DE DESVINCULAÇÃO ---
+        elif text == '/desvincular':
+            reply_message = "⚠️ Você tem certeza que deseja desvincular sua conta? Você não poderá mais adicionar notas pelo Telegram. Para confirmar, envie o comando: /desvincular sim"
+
+        elif text == '/desvincular sim':
+            headers = {'Authorization': f'Bearer {DJANGO_API_KEY}'}
+            payload = {'chat_id': chat_id}
+            response = requests.post(DJANGO_UNLINK_API_URL, json=payload, headers=headers)
+            response.raise_for_status()
+            reply_message = response.json().get('message', "✅ Conta desvinculada com sucesso.")
+            
+        else:
+            reply_message = "Comando não reconhecido. Use /vincular, /desvincular ou /nota."
 
     except Exception as e:
-        reply_message = f"❌ Erro ao salvar a nota: {str(e)}"
+        reply_message = f"❌ Ocorreu um erro: {str(e)}"
+        print(f"[ERROR] {str(e)}")
 
-    # 4. Envia a resposta de volta ao usuário no Telegram
+    # Envia a resposta final para o usuário
     requests.post(TELEGRAM_API_URL, json={'chat_id': chat_id, 'text': reply_message})
     
     return {'statusCode': 200}

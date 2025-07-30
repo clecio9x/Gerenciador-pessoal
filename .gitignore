@@ -2,14 +2,20 @@
 # NUNCA remova esta linha
 .env
 
-*.pyc
-__pycache__/
+# Banco de dados de desenvolvimento
 db.sqlite3
-.env
-.env.local
-*.log
-/static/
-/media/
-/venv/
-/.env*
+*.sqlite3
 
+# Arquivos de cache do Python
+__pycache__/
+*.py[cod]
+*~
+
+# Pasta de arquivos estáticos coletados (para produção)
+/staticfiles/
+/media/
+
+# Ambientes virtuais
+venv/
+env/
+.venv/

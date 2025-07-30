@@ -13,7 +13,7 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['88a4ddf70a5e4c3a85f075f9c63c5cd9.vfs.cloud9.us-east-1.amazonaws.com', 'localhost', '127.0.0.1', '3.231.215.173', '3.89.243.33']
+ALLOWED_HOSTS = ['88a4ddf70a5e4c3a85f075f9c63c5cd9.vfs.cloud9.us-east-1.amazonaws.com', 'localhost', '127.0.0.1', '3.231.215.173', ]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://88a4ddf70a5e4c3a85f075f9c63c5cd9.vfs.cloud9.us-east-1.amazonaws.com'
